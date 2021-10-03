@@ -1,0 +1,15 @@
+http://127.0.0.1:5000/api/file/test?path=D%3A%5CVideos%5Cpd48.mp4&type=inline
+
+
+.net web api download video
+
+
+https://www.codeproject.com/Articles/820146/HTTP-Partial-Content-In-ASP-NET-Web-API-Video
+
+https://www.c-sharpcorner.com/UploadFile/vendettamit/handling-range-specific-content-request-in-webapi-Asp-Net/
+
+https://www.cnblogs.com/tianma3798/p/13445147.html
+Range: bytes=262144-
+
+
+.net5 文件 Content-Range

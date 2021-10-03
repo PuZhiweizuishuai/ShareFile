@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ShareFile</name>
+    </assembly>
+    <members>
+        <member name="T:ShareFile.Config.AuthFilter">
+            <summary>
+            接口权限限制
+            </summary>
+        </member>
+        <member name="T:ShareFile.Config.UserFilter">
+            <summary>
+            为访问用户添加身份
+            </summary>
+        </member>
+        <member name="M:ShareFile.Config.UserFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            在 Controller 方法之前执行
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:ShareFile.Config.UserFilter.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
+            <summary>
+            在 Controller 方法之后执行
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:ShareFile.Controllers.FileBrowsingController">
+            <summary>
+            文件浏览 API
+            权限设置
+            仅本地用户可读
+            即通过127.0.0.1访问或localhost访问的用户
+            </summary>
+        </member>
+        <member name="M:ShareFile.Controllers.FileBrowsingController.DriverInfo">
+            <summary>
+            默认加载项目
+            显示系统盘符，方便用户选择
+            </summary>
+            <returns>可读盘符列表</returns>
+        </member>
+        <member name="M:ShareFile.Controllers.FileBrowsingController.FileBrowsing(System.String)">
+            <summary>
+            显示当前目录下文件列表
+            </summary>
+            <param name="path">文件目录</param>
+            <returns>文件列表</returns>
+        </member>
+        <member name="M:ShareFile.Controllers.FileViewAndSaveController.DownloadFile(System.String,System.String)">
+            <summary>
+            所有文件
+            </summary>
+            <param name="path"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ShareFile.Controllers.ReaderPowerController">
+            <summary>
+            设置文件阅读权限
+            </summary>
+        </member>
+        <member name="M:ShareFile.Controllers.ReaderPowerController.ReaderFlileByKey(ShareFile.Domain.ReaderKey)">
+            <summary>
+            输入密码接口
+            </summary>
+            <param name="readerKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ShareFile.Controllers.ShareController.Save(ShareFile.Domain.ShareDomain)">
+            <summary>
+            创建分享
+            </summary>
+            <param name="share">分享对象</param>
+            <returns>分享结果</returns>
+        </member>
+        <member name="T:ShareFile.Controllers.UserIpController">
+            <summary>
+            展示用户IP
+            </summary>
+        </member>
+        <member name="M:ShareFile.Controllers.UserIpController.GetIp">
+            <summary>
+            返回用户访问IP
+            </summary>
+            <returns>返回用户访问IP</returns>
+        </member>
+        <member name="M:ShareFile.Controllers.UserIpController.SysIp">
+            <summary>
+            返回系统IP
+            </summary>
+            <returns>返回用户访问IP</returns>
+        </member>
+        <member name="M:ShareFile.Controllers.WebInfoController.WebInfo">
+            <summary>
+            
+            获取网站信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ShareFile.Controllers.WebInfoController.Login(ShareFile.Domain.ReaderKey)">
+            <summary>
+            远程登录接口
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ShareFile.Controllers.WebInfoController.UpdateInfo(ShareFile.Domain.WebInfoModel)">
+            <summary>
+            更新网站个性化设置
+            </summary>
+            <param name="webInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ShareFile.DB.ShareContext">
+            <summary>
+            操作数据库
+            </summary>
+        </member>
+        <member name="M:ShareFile.DB.ShareContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions)">
+            <summary>
+            
+            </summary>
+            <param name="options"></param>
+        </member>
+        <member name="M:ShareFile.DB.ShareContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            创建数据库表
+            </summary>
+            <param name="modelBuilder"></param>
+        </member>
+        <member name="P:ShareFile.Domain.FileInfoDomain.Type">
+            <summary>
+            文件类型
+            0 文件夹
+            1 文件
+            </summary>
+        </member>
+        <member name="T:ShareFile.Domain.ReaderKey">
+            <summary>
+            读取文件密码
+            </summary>
+        </member>
+        <member name="P:ShareFile.Domain.ReaderKey.FileId">
+            <summary>
+            分享文件ID
+            </summary>
+        </member>
+        <member name="P:ShareFile.Domain.ReaderKey.Key">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="T:ShareFile.Domain.ShareDomain">
+            <summary>
+            文件分享对象
+            </summary>
+        </member>
+        <member name="P:ShareFile.Domain.ShareDomain.Id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ShareFile.Domain.ShareDomain.Note">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:ShareFile.Domain.ShareDomain.ExpirationTime">
+            <summary>
+            过期时间
+            </summary>
+        </member>
+        <member name="P:ShareFile.Domain.ShareDomain.HasKey">
+            <summary>
+            是否需要密码
+            </summary>
+        </member>
+        <member name="P:ShareFile.Domain.ShareDomain.Key">
+            <summary>
+            访问密码
+            </summary>
+        </member>
+        <member name="P:ShareFile.Domain.ShareDomain.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:ShareFile.Domain.ShareDomain.Path">
+            <summary>
+            路径
+            </summary>
+        </member>
+        <member name="P:ShareFile.Domain.ShareDomain.Name">
+            <summary>
+            文件名
+            </summary>
+        </member>
+        <member name="P:ShareFile.Domain.ShareDomain.ViewCount">
+            <summary>
+            访问次数
+            </summary>
+        </member>
+        <member name="P:ShareFile.Domain.ShareDomain.DownloadCount">
+            <summary>
+            下载次数
+            </summary>
+        </member>
+        <member name="P:ShareFile.Domain.ShareDomain.CanReader">
+            <summary>
+            有没有阅读权限
+            </summary>
+        </member>
+        <member name="M:ShareFile.Program.CreateDbIfNotExists(Microsoft.Extensions.Hosting.IHost)">
+            <summary>
+            创建数据库
+            </summary>
+            <param name="host"></param>
+        </member>
+        <member name="T:ShareFile.Repository.UserRepository">
+            <summary>
+            保存用户访问记录
+            </summary>
+        </member>
+        <member name="M:ShareFile.Repository.UserRepository.CheckPower(Microsoft.AspNetCore.Http.ISession,System.String)">
+            <summary>
+            检查用户是否有当前资源访问权限
+            </summary>
+            <param name="session">用户session</param>
+            <param name="id">资源ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShareFile.Repository.UserRepository.SavePower(Microsoft.AspNetCore.Http.ISession,System.String)">
+            <summary>
+            标记用户对当前资源的访问权限
+            </summary>
+            <param name="session">用户session</param>
+            <param name="id">资源标识</param>
+        </member>
+        <member name="F:ShareFile.Service.FileBrowsingServiceImpl.RUN_PATH">
+            <summary>
+            默认路径
+            </summary>
+        </member>
+        <member name="M:ShareFile.Service.ShareServiceImpl.GetShare(Microsoft.AspNetCore.Http.HttpContext,System.String,System.Boolean)">
+            <summary>
+            获取分享
+            </summary>
+            <param name="session"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ShareFile.Utils.PathFilterUtil.PathFilter(System.String,System.String)">
+            <summary>
+            返回处理过的文件路径
+            </summary>
+            <param name="path">用户输入路径</param>
+            <param name="defaultPath">错误后默认返回路径</param>
+            <returns>文件路径</returns>
+        </member>
+    </members>
+</doc>
