@@ -29,7 +29,8 @@ namespace ShareFile.Config
         {
             "127.0.0.1",
             "localhost",
-            "::1"
+            "::1",
+            "::ffff:127.0.0.1"
         };
 
         private readonly ILogger<AuthFilter> _logger;

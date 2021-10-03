@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using ShareFile.Config;
+using System;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -23,6 +24,11 @@ namespace ShareFile.Utils
             {
                 ip = request.HttpContext.Connection.RemoteIpAddress.ToString();
             }
+            //Console.WriteLine(request.HttpContext.Connection.RemoteIpAddress.ToString());
+            //if (string.IsNullOrWhiteSpace(ip) || ip.Length == 0 || "unknown" == ip || AuthFilter.WHITE_LIST.Contains(ip))
+            //{
+            //    ip = request.HttpContext.Connection.RemoteIpAddress.MapToIPv6().ToString();
+            //}
             return ip;
         }
 
