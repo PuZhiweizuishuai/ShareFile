@@ -11,8 +11,29 @@
         <v-btn text color="success" depressed @click="backToLast()">
           ◀ 返回上一级
         </v-btn>
+
+
+        <v-btn text style="float:right;" color="warning" depressed @click="onlySeeVideo()">
+          只看视频
+        </v-btn>
+       
+        <v-btn text style="float:right;" color="primary" depressed @click="onlySeePhoto()">
+          只看图片
+        </v-btn>
+       
+        <v-btn text style="float:right;" color="error" depressed @click="seeAll()">
+          全部
+        </v-btn>
       </v-col>
     </v-row>
+
+    <v-row justify="end" v-show="isOnlySeePhoto">
+        <v-btn text color="error" depressed @click="seeAll()">
+          预览
+        </v-btn>
+        &nbsp;&nbsp;&nbsp;
+    </v-row>
+
 
     <v-row> 
       <v-col>
@@ -183,12 +204,14 @@ export default {
         { text: "操作", value: "actions", sortable: false },
       ],
       fileList: [],
+      backList: [],
       size: 1000,
       // 保存上一次请求成功的地址
       lastPath: '',
       rootPath: this.driver,
       shareFlieData: {},
-      shareDialogkey: 56498
+      shareDialogkey: 56498,
+      isOnlySeePhoto: false
     };
   },
   created() {
@@ -201,6 +224,7 @@ export default {
           this.fileList = json.data || [];
           this.size = this.fileList.length
           this.lastPath = this.path
+          this.backList = this.fileList
           this.$emit("lastpath", this.lastPath)
         } else if (json.status === 0) {
           this.$emit("errorpath", true)
@@ -240,6 +264,33 @@ export default {
       this.shareDialogkey++
       this.shareFlieData = item
       this.shareDialog = true
+    },
+    onlySeeVideo() {
+      //
+      let videList = []
+      for (let i = 0; i < this.backList.length; i++) {
+        if (this.backList[i].type == 3) {
+          videList.push(this.backList[i])
+        }
+      }
+      this.fileList = videList
+      this.isOnlySeePhoto = false
+    },
+    onlySeePhoto() {
+      //
+      let videList = []
+      for (let i = 0; i < this.backList.length; i++) {
+        if (this.backList[i].type == 2) {
+          videList.push(this.backList[i])
+        }
+      }
+      this.fileList = videList
+      this.isOnlySeePhoto = true
+    },
+    seeAll() {
+      //
+      this.fileList = this.backList
+      this.isOnlySeePhoto = false
     }
   },
 };

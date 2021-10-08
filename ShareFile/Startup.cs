@@ -27,6 +27,7 @@ namespace ShareFile
             Configuration = configuration;
             Console.WriteLine("——————————————————————————————————————————");
             Console.WriteLine("系统超级管理员密码（远程访问时使用）：" + WebInfoConfig.AdminKey);
+            Console.WriteLine("此密码为系统随机生成，每次启动都会变化，请不要泄露此密码，泄露可能造成严重安全问题！");
             Console.WriteLine("——————————————————————————————————————————");
             Console.WriteLine("打开浏览器输入：http://127.0.0.1:5000 访问此系统！");
             Console.WriteLine("\n以下内容为系统日志：");

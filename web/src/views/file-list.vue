@@ -43,7 +43,9 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <v-btn depressed color="primary" @click="seeFile(item)"> 查看 </v-btn>
+            <v-btn depressed color="primary" small @click="seeFile(item)"> 查看 </v-btn>
+            &nbsp;&nbsp;
+            <v-btn depressed color="success" small @click="copyLink(item)"> 复制链接 </v-btn>
           </template>
         </v-data-table>
       </v-col>
@@ -55,6 +57,15 @@
 
     </v-row>
     <v-col></v-col>
+        <v-snackbar v-model="snackbar" timeout="3000" top>
+      {{ message }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
+          关闭
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -110,6 +121,9 @@ export default {
       page: 1,
       totalCount: 0,
       totalPages: 0,
+      sysIp: '',
+      message: '',
+      snackbar: false
     };
   },
   created() {
@@ -122,8 +136,14 @@ export default {
       }
     }
     this.getShareList();
+    this.getSysIp();
   },
   methods: {
+    getSysIp() {
+      this.httpGet("/ip/sys", (json) => {
+        this.sysIp = json.data
+      });
+    },
     getShareList() {
       this.httpGet(
         `/share/list?page=${this.page}&size=${this.size}`,
@@ -156,6 +176,32 @@ export default {
     seeFile(item) {
       console.log(item);
       this.$router.push(`/share/link/${item.id}`)
+    },
+    copyLink(item) {
+      //console.log(item);
+      let shareUrl = '链接：'
+      if (location.port == 80 || location.port == 443) {
+          shareUrl += `${this.sysIp}/share/link/${item.id}`;
+        } else {
+          shareUrl += `${this.sysIp}:${location.port}/share/link/${item.id}`;
+      }
+      if (item.hasKey) {
+        shareUrl += "  提取码：" + item.key
+      }
+      // console.log(shareUrl);
+      // 链接：http://172.16.2.141:8080/share/link/fac1c96477f948cb89dcf5e7a46e991e  提取码：123456
+      const transfer = document.createElement("input");
+      document.body.appendChild(transfer);
+      transfer.value = shareUrl; // 这里表示想要复制的内容
+      transfer.focus();
+      transfer.select();
+      if (document.execCommand("copy")) {
+        document.execCommand("copy");
+      }
+      transfer.blur();
+      this.message = "复制成功！ ";
+      this.snackbar = true;
+      document.body.removeChild(transfer);
     }
   },
 };

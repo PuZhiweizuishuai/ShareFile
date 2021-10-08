@@ -7,7 +7,7 @@
           <v-card-title> 文件 {{ fileInfo.name }} 分享成功 </v-card-title>
           <v-card-subtitle>
             <v-row>
-              <v-col> 将此连接分享给你的好友即可访问此文件： </v-col>
+              <v-col> 将此连接分享给你的好友即可访问此文件（如果有密码，记得分享密码😄）：</v-col>
             </v-row>
 
             <v-row>
@@ -16,6 +16,15 @@
                 <v-btn depressed color="success" @click="copy()">
                   点击复制
                 </v-btn>
+                <v-btn depressed color="primary" @click="createQRCode()">
+                  生成二维码
+                </v-btn>
+              </v-col>
+            </v-row>
+
+            <v-row v-show="showQrCode">
+              <v-col>
+                <canvas id="qr-container" />
               </v-col>
             </v-row>
           </v-card-subtitle>
@@ -140,6 +149,7 @@
 var TYPE = ["文件夹", "文件", "图片", "视频", "音频", "文本", "PDF"];
 import DPlayer from "@/components/play/player.vue";
 import Voice from "@/components/play/voice.vue";
+import QRCode from 'qrcode'
 export default {
   components: {
     DPlayer,
@@ -161,6 +171,7 @@ export default {
       share: {
         key: "",
       },
+      showQrCode: false
     };
   },
   created() {
@@ -199,9 +210,9 @@ export default {
       ) {
         this.showShareInfo = true;
         if (location.port == 80 || location.port == 443) {
-          this.shareUrl = `${this.sysIp}/share/link/${this.$route.params.id}`;
+          this.shareUrl = `链接：${this.sysIp}/share/link/${this.$route.params.id}`;
         } else {
-          this.shareUrl = `${this.sysIp}:${location.port}/share/link/${this.$route.params.id}`;
+          this.shareUrl = `链接：${this.sysIp}:${location.port}/share/link/${this.$route.params.id}`;
         }
       }
     },
@@ -231,6 +242,12 @@ export default {
       this.snackbar = true;
       document.body.removeChild(transfer);
     },
+    createQRCode() {
+      this.showQrCode = true
+      QRCode.toCanvas(document.querySelector('#qr-container'), this.shareUrl, { errorCorrectionLevel: 'H' }, function(err) {
+        if (err) throw err
+      })
+    }
   },
 };
 </script>

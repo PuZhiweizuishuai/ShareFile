@@ -6,6 +6,7 @@
     <Company>https://www.buguagaoshu.com/</Company>
     <PackageIcon>logo.png</PackageIcon>
     <PackageIconUrl />
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

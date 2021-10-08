@@ -10,7 +10,7 @@
 *.userosscache
 *.sln.docstates
 
-
+!ShareFile.sln
 /ShareFile/bin
 /ShareFile/obj
 /ShareFile/.config

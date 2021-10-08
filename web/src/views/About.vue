@@ -52,5 +52,19 @@
         Firefox： <a href="https://www.firefox.com.cn/" target="_blank">https://www.mozilla.org/</a>
       </v-col>
     </v-row>
+
+        <v-row>
+      <v-col cols="12">
+        <h1>Bug 反馈与源码获取</h1>
+        <v-divider />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        Github: <a href="https://github.com/PuZhiweizuishuai/ShareFile" target="_blank">https://github.com/PuZhiweizuishuai/ShareFile</a><br>
+        <br>
+        Gitee: <a href="https://gitee.com/puzhiweizuishuai/ShareFile" target="_blank">https://gitee.com/puzhiweizuishuai/ShareFile</a>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
