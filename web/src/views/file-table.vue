@@ -28,7 +28,7 @@
     </v-row>
 
     <v-row justify="end" v-show="isOnlySeePhoto">
-        <v-btn text color="error" depressed @click="seeAll()">
+        <v-btn text color="error" depressed @click="openViewImage()">
           预览
         </v-btn>
         &nbsp;&nbsp;&nbsp;
@@ -113,6 +113,95 @@
       :key="shareDialogkey"
     >
       <ShareCard :file="shareFlieData"/>
+    </v-dialog>
+
+    <!-- 显示图片预览框 -->
+       <v-dialog
+      id="imageViews"
+      v-model="imageDialog"
+      persistent
+      fullscreen
+      max-width="290"
+    >
+      <v-card>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            color="error"
+            text
+            @click="imageDialog = false"
+          >
+            关闭
+          </v-btn>
+        </v-card-actions>
+        <v-card-text>
+
+          <v-row v-resize="onResize">
+            <v-col
+              v-touch="{
+                left: () => swipe(0),
+                right: () => swipe(1),
+                up: () => swipe(2),
+                down: () => swipe(3)
+              }"
+              :cols="colsLeft"
+            >
+              <v-row>
+                <v-col cols="6">
+                  <span v-text="nowViweImage.name" />
+                </v-col>
+                <v-col cols="6">
+                  <v-switch
+                    v-model="showImageList"
+                    inset
+                    :label="`显示列表`"
+                    @click="clickShowImageList()"
+                  />
+                </v-col>
+              </v-row>
+
+              <v-img
+                v-if="imageDialog"
+                contain
+                :max-height="getImageMax()"
+                :src="getImageSrc()"
+              />
+            </v-col>
+            <v-col v-if="showImageList" :cols="colsRight">
+              <v-card outlined>
+                <v-card-text>
+                  <v-virtual-scroll
+                    :items="fileList"
+                    :height="imageListHeight"
+                    item-height="64"
+                  >
+                    <template v-slot:default="{ item, index }">
+                      <v-list-item :key="index" link @click="changeImage(item, index)">
+                        <v-list-item-content>
+                          <v-list-item-title v-text="item.name" />
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-divider />
+                    </template>
+                  </v-virtual-scroll>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+          <v-col />
+          <v-row justify="space-around">
+            <v-btn depressed color="primary" @click="previousImage()">
+              上一张
+            </v-btn>
+
+            <v-btn depressed color="success" @click="nextImage()">
+              下一张
+            </v-btn>
+          </v-row>
+          <v-col />
+        </v-card-text>
+
+      </v-card>
     </v-dialog>
 
 
@@ -211,7 +300,18 @@ export default {
       rootPath: this.driver,
       shareFlieData: {},
       shareDialogkey: 56498,
-      isOnlySeePhoto: false
+      isOnlySeePhoto: false,
+      imageDialog: false,
+      nowViweImageIndex: 0,
+      nowViweImage: {},
+      showImageList: false,
+      windowSize: {
+        x: 0,
+        y: 0
+      },
+      colsLeft: 10,
+      colsRight: 2,
+      imageListHeight: window.innerHeight - 100
     };
   },
   created() {
@@ -291,7 +391,74 @@ export default {
       //
       this.fileList = this.backList
       this.isOnlySeePhoto = false
-    }
+    },
+    getImageSrc() {
+      return `/api/file/load?path=${encodeURIComponent(this.nowViweImage.path)}&type=inline`
+      // return `/api/upload/file?path=${this.nowPath}/${encodeURIComponent(this.nowViweImage.name)}&type=inline`
+    },
+    getImageMax() {
+      // console.log(window.innerHeight)
+      return window.innerHeight - 100
+      // return 500
+    },
+    swipe(type) {
+      if (type === 0 || type === 2) {
+        this.nextImage()
+      } else {
+        this.previousImage()
+      }
+    },
+    changeImage(item, index) {
+      this.nowViweImageIndex = index
+      this.nowViweImage = item
+    },
+    nextImage() {
+      if (this.nowViweImageIndex === this.fileList.length - 1) {
+        this.message = '已经是最后一张图片了！'
+        this.snackbar = true
+        return
+      }
+      this.nowViweImageIndex++
+      this.nowViweImage = this.fileList[this.nowViweImageIndex]
+    },
+    previousImage() {
+      if (this.nowViweImageIndex === 0) {
+        this.message = '已经是第一张图片了！'
+        this.snackbar = true
+        return
+      }
+      this.nowViweImageIndex--
+      this.nowViweImage = this.fileList[this.nowViweImageIndex]
+    },
+    openViewImage() {
+      const length = this.fileList.length
+      if (length === 0) {
+        this.message = '当前文件夹没有图片。'
+        this.snackbar = true
+        return
+      }
+      this.nowViweImage = this.fileList[0]
+      this.imageDialog = true
+    },
+    clickShowImageList() {
+      this.onResize()
+    },
+    onResize() {
+      this.windowSize = { x: window.innerWidth, y: window.innerHeight }
+      if (this.showImageList) {
+        if (this.windowSize.x > 800) {
+          this.colsLeft = 10
+          this.colsRight = 2
+          this.imageListHeight = window.innerHeight - 100
+        } else {
+          this.colsLeft = 12
+          this.colsRight = 12
+          this.imageListHeight = 200
+        }
+      } else {
+        this.colsLeft = 12
+      }
+    },
   },
 };
 </script>

@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title> 分享 {{ fileInfo.name }} </v-card-title>
     <v-card-subtitle>
-    <!-- 重命名 -->
+      <!-- 重命名 -->
       <v-row>
         <v-col>
           <v-text-field
@@ -37,13 +37,17 @@
 
       <!-- 密码 -->
       <v-row v-show="share.hasKey">
-        <v-col>
+        <v-col cols="8">
           <v-text-field
             v-model="share.key"
             label="访问密码"
             clearable
-            type="password"
           />
+        </v-col>
+        <v-col cols="4">
+          <v-btn depressed color="success" @click="randomKey()">
+            随机生成密码
+          </v-btn>
         </v-col>
       </v-row>
 
@@ -57,24 +61,18 @@
     </v-card-subtitle>
 
     <v-card-actions>
-       <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="green darken-1"
-            text
-            @click="shareFile()"
-          >
-            分享
-          </v-btn>
-        </v-card-actions>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="green darken-1" text @click="shareFile()"> 分享 </v-btn>
+      </v-card-actions>
     </v-card-actions>
 
-        <v-snackbar v-model="snackbar"  timeout="3000" top>
+    <v-snackbar v-model="snackbar" timeout="3000" top>
       {{ message }}
 
       <template v-slot:action="{ attrs }">
         <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
-          Close
+          关闭
         </v-btn>
       </template>
     </v-snackbar>
@@ -104,48 +102,65 @@ export default {
         key: "",
         path: this.file.path,
         name: this.file.name,
-        type: this.file.type
+        type: this.file.type,
       },
       snackbar: false,
-      message: ''
+      message: "",
     };
   },
   methods: {
     shareFile() {
       if (this.share.hasKey) {
-        if (this.share.key == '' || this.share.key == null || this.share.key < 6) {
-          this.message = '密码不能为空且密码长度要大于6'
-          this.snackbar = true
-          return
+        if (
+          this.share.key == "" ||
+          this.share.key == null ||
+          this.share.key < 6
+        ) {
+          this.message = "密码不能为空且密码长度要大于6";
+          this.snackbar = true;
+          return;
         }
       }
       if (this.share.expirationTime != 0) {
         if (this.share.expirationTime < new Date().getTime()) {
-          this.message = '过期时间必须在当前时间之后'
-          this.snackbar = true
-          return
+          this.message = "过期时间必须在当前时间之后";
+          this.snackbar = true;
+          return;
         }
       }
-      this.httpPost('/share/save', this.share, (json) => {
+      this.httpPost("/share/save", this.share, (json) => {
         if (json.status === 200) {
-          this.$router.push(`/share/link/${json.data.id}`)
+          this.$router.push(`/share/link/${json.data.id}`);
         } else {
           //
-          this.message = json.message
-          this.snackbar = true
+          this.message = json.message;
+          this.snackbar = true;
         }
-      })
+      });
     },
     getExporationTime(time) {
       //console.log(time);
-      this.share.expirationTime = new Date(time).getTime()
+      this.share.expirationTime = new Date(time).getTime();
     },
     showSwitchKey() {
       if (this.share.hasKey) {
-        return '开'
-      } 
-      return '关'
-    }
+        return "开";
+      }
+      return "关";
+    },
+    randomKey() {
+      this.share.key = this.guid().substring(0, 6)
+    },
+    guid() {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+        /[xy]/g,
+        function (c) {
+          var r = (Math.random() * 16) | 0,
+            v = c == "x" ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        }
+      );
+    },
   },
 };
 </script>

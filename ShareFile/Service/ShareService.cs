@@ -21,6 +21,9 @@ namespace ShareFile.Service
         PageDomain<ShareDomain> GetShareList(int page, int size, bool isAdmin);
 
 
+        bool DeleteShare(ShareDomain share);
+
+
         bool CanReader(string id, string key);
     }
 
@@ -61,6 +64,21 @@ namespace ShareFile.Service
             else
             {
                 return true;
+            }
+        }
+
+        public bool DeleteShare(ShareDomain share)
+        {
+            try
+            {
+                Context.SharesFile.Remove(share);
+                Context.SaveChangesAsync();
+                return true;
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
             }
         }
 

@@ -48,6 +48,28 @@ namespace ShareFile.Controllers
             return ResponseDetails.Ok().Add("data", shareDomain);
         }
 
+        /// <summary>
+        /// 删除分享
+        /// </summary>
+        /// <param name="share">删除对象</param>
+        /// <returns></returns>
+        [Route("delete")]
+        [HttpPost]
+        [ServiceFilter(typeof(AuthFilter))]
+        public ResponseDetails Delete(ShareDomain share)
+        {
+            if (_shareService.DeleteShare(share))
+            {
+                return ResponseDetails.Ok();
+            }
+            return ResponseDetails.Ok(0, "删除失败，分享不存在或者已删除！");
+        }
+
+        /// <summary>
+        /// 获取分享
+        /// </summary>
+        /// <param name="id">分享ID</param>
+        /// <returns></returns>
         [Route("get")]
         [HttpGet]
         public ResponseDetails GetShare(string id)
@@ -60,6 +82,13 @@ namespace ShareFile.Controllers
             return ResponseDetails.Ok().Add("data", shareDomain);
         }
 
+
+        /// <summary>
+        /// 分享列表
+        /// </summary>
+        /// <param name="page">页码</param>
+        /// <param name="size">每页大小</param>
+        /// <returns></returns>
         [Route("list")]
         [HttpGet]
         public ResponseDetails ShareList(int page, int size)

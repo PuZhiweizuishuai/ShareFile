@@ -46,6 +46,8 @@
             <v-btn depressed color="primary" small @click="seeFile(item)"> 查看 </v-btn>
             &nbsp;&nbsp;
             <v-btn depressed color="success" small @click="copyLink(item)"> 复制链接 </v-btn>
+            <span v-if="showDeletePower">&nbsp;&nbsp;</span>
+            <v-btn v-if="showDeletePower" depressed color="error" small @click="deleteShare(item)"> 删除 </v-btn>
           </template>
         </v-data-table>
       </v-col>
@@ -66,6 +68,36 @@
         </v-btn>
       </template>
     </v-snackbar>
+
+   <v-dialog
+      v-model="deleteDialog"
+      persistent
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="text-h5">
+          你确定要删除这条分享吗？
+        </v-card-title>
+        <v-card-text> {{ nowDeleteItem.name }} </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="green darken-1"
+            text
+            @click="deleteDialog = false"
+          >
+            关闭
+          </v-btn>
+          <v-btn
+            color="green darken-1"
+            text
+            @click="sendDeleteItem()"
+          >
+            确定
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -123,7 +155,10 @@ export default {
       totalPages: 0,
       sysIp: '',
       message: '',
-      snackbar: false
+      snackbar: false,
+      showDeletePower: false,
+      nowDeleteItem: {},
+      deleteDialog: false
     };
   },
   created() {
@@ -137,12 +172,18 @@ export default {
     }
     this.getShareList();
     this.getSysIp();
+    this.getPower();
   },
   methods: {
     getSysIp() {
       this.httpGet("/ip/sys", (json) => {
         this.sysIp = json.data
       });
+    },
+    getPower() {
+      this.httpGet('/reader/hasAdmin', (json)=> {
+        this.showDeletePower = json.data
+      })
     },
     getShareList() {
       this.httpGet(
@@ -202,6 +243,26 @@ export default {
       this.message = "复制成功！ ";
       this.snackbar = true;
       document.body.removeChild(transfer);
+    },
+    deleteShare(item) {
+      // 
+      // console.log(item);
+      this.nowDeleteItem = item
+      this.deleteDialog = true
+    },
+    sendDeleteItem() {
+      this.httpPost("/share/delete", this.nowDeleteItem, (json) => {
+        if (json.status === 200) {
+          this.message = "删除成功！"
+          this.snackbar = true
+          this.getShareList()
+          this.deleteDialog = false
+        } else {
+          //
+          this.message = json.message;
+          this.snackbar = true;
+        }
+      });
     }
   },
 };

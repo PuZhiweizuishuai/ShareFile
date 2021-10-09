@@ -75,6 +75,28 @@
             <param name="share">分享对象</param>
             <returns>分享结果</returns>
         </member>
+        <member name="M:ShareFile.Controllers.ShareController.Delete(ShareFile.Domain.ShareDomain)">
+            <summary>
+            删除分享
+            </summary>
+            <param name="share">删除对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShareFile.Controllers.ShareController.GetShare(System.String)">
+            <summary>
+            获取分享
+            </summary>
+            <param name="id">分享ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShareFile.Controllers.ShareController.ShareList(System.Int32,System.Int32)">
+            <summary>
+            分享列表
+            </summary>
+            <param name="page">页码</param>
+            <param name="size">每页大小</param>
+            <returns></returns>
+        </member>
         <member name="T:ShareFile.Controllers.UserIpController">
             <summary>
             展示用户IP

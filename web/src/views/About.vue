@@ -66,5 +66,9 @@
         Gitee: <a href="https://gitee.com/puzhiweizuishuai/ShareFile" target="_blank">https://gitee.com/puzhiweizuishuai/ShareFile</a>
       </v-col>
     </v-row>
+
+    <v-row>
+      <v-col/>
+    </v-row>
   </v-container>
 </template>
