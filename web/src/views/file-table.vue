@@ -298,6 +298,8 @@ export default {
       // 保存上一次请求成功的地址
       lastPath: '',
       rootPath: this.driver,
+      pathHistory: [],
+      pathIndex: 0,
       shareFlieData: {},
       shareDialogkey: 56498,
       isOnlySeePhoto: false,
@@ -316,6 +318,7 @@ export default {
   },
   created() {
     this.getFileList()
+    this.pathHistory.push(this.rootPath)
   },
   methods: {
     getFileList() {
@@ -332,25 +335,24 @@ export default {
       });
     },
     backToLast() {
-      if (this.path == this.rootPath || `${this.path}\\` == this.rootPath) {
+      // TODO 需要重写 Linux 下有 Bug
+      if (this.pathHistory.length == 1 || this.pathIndex == 0) {
         this.message = '已经是根目录了，无法再返回！'
         this.snackbar = true
         return
       }
-      let pox = this.path.lastIndexOf("\\")
-      let pox2 = this.path.indexOf("\\")
-      if (pox2 == pox) {
-        this.path = this.path.substring(0, pox + 1)
-      } else {
-        this.path = this.path.substring(0, pox)
-      }
-      //console.log(this.lastPath)
-      //console.log(this.lastPath.lastIndexOf("\\"))
+      //this.pathHistory.splice(this.pathIndex, 1)
+      this.pathIndex--
+      this.pathHistory.pop()
+      this.path = this.pathHistory[this.pathIndex]
+      
       this.$emit('path', this.path)
       this.getFileList()
     },
     openFolder(item) {
       this.path = item.path
+      this.pathHistory.push(item.path)
+      this.pathIndex++
       this.getFileList()
       this.$emit('path', this.path)
     },
@@ -394,7 +396,6 @@ export default {
     },
     getImageSrc() {
       return `/api/file/load?path=${encodeURIComponent(this.nowViweImage.path)}&type=inline`
-      // return `/api/upload/file?path=${this.nowPath}/${encodeURIComponent(this.nowViweImage.name)}&type=inline`
     },
     getImageMax() {
       // console.log(window.innerHeight)
