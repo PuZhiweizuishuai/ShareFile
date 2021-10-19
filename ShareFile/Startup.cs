@@ -39,8 +39,8 @@ namespace ShareFile
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Data Source=
-            string dataSource = "Data Source=" +  Directory.GetCurrentDirectory() + @"\share.db";
+            string dataSource = "Data Source=" + Path.Combine(Directory.GetCurrentDirectory(), "share.db");
+            Console.WriteLine("Êý¾Ý¿âµØÖ·£º" + dataSource);
             // Configuration.GetConnectionString("ShareContext)"
             // Console.WriteLine(dataSource);
             services.AddDbContext<ShareContext>(options =>

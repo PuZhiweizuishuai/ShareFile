@@ -36,7 +36,7 @@ namespace ShareFile.Controllers
         [ServiceFilter(typeof(AuthFilter))]
         public ResponseDetails Save(ShareDomain share)
         {
-            if (share.Path == Directory.GetCurrentDirectory() + @"\share.db")
+            if (share.Path == Path.Combine(Directory.GetCurrentDirectory(), "share.db"))
             {
                 return ResponseDetails.Ok(0, "此文件包含程序敏感信息，暂不能分享");
             }
